@@ -4,36 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FileFindingTool"
+        xmlns:local1="clr-namespace:FileFindingTool"
         mc:Ignorable="d"
         Title="MainWindow" Height="180" Width="400">
     <Window.DataContext>
         <local:ViewModel/>
     </Window.DataContext>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        
-        <Grid.RowDefinitions>
-            <RowDefinition Height="80"/>
-            <RowDefinition Height="60"/>
-        </Grid.RowDefinitions>
-
-        <StackPanel Orientation="Vertical" Grid.ColumnSpan="2">
-            <StackPanel Orientation="Vertical">
-                <TextBlock>Name of the file you want to search with its extension:</TextBlock>
-                <TextBox Text="{Binding SearchName}"/>
-            </StackPanel>
-            <StackPanel>
-                <TextBlock>Path of the directory in you want to search: </TextBlock>
-                <TextBox Text="{Binding SearchDirectory}"/>
-            </StackPanel>
-        </StackPanel>
-
-        <StackPanel Orientation="Vertical" Grid.ColumnSpan="2" Grid.Row="1">
-            <Button Command="{Binding FindFile}" >Find and Open!</Button>
-            <TextBlock  Text="{Binding FileFoundPath}"/>
-        </StackPanel>
+        <local1:MyControl/>
     </Grid>
 </Window>

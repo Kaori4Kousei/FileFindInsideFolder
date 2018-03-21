@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="FileFindingTool.MyControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FileFindingTool"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Vertical">
+            <TextBlock>Name of the file you want to search with extension:</TextBlock>
+            <TextBox Text="{Binding SearchName}"/>
+            <TextBlock>Directory in which you want to search for Eg. E:\</TextBlock>
+            <TextBox Text="{Binding SearchDirectory}"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Vertical">
+            <Button Command="{Binding FindFile}">Find the files!</Button>
+            <ListBox ItemsSource="{Binding FileFoundPathList}" SelectedItem="{Binding SelectedItem}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding FileFoundPath}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <TextBlock Text="{Binding SelectedItem}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

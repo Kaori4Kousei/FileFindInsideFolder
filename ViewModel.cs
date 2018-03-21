@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -14,6 +15,9 @@ namespace FileFindingTool
     {
         private string _searchName;
         private static int depthCounter=0;
+        private List<string> _fileFoundPathList;
+        private string _selectedItem;
+
         public string SearchName
         {
             get => _searchName;
@@ -48,7 +52,7 @@ namespace FileFindingTool
         }
 
         public ICommand FindFile => new RelayCommand(() => {
-            IsFileFound=ProcessDirectory(SearchDirectory, SearchName);
+            ProcessDirectory(SearchDirectory, SearchName);
         }
     );
 
@@ -69,31 +73,54 @@ namespace FileFindingTool
 
         private static bool IsFileFound;
 
-
-        public static bool ProcessDirectory(string targetDirectory, string foilName)
+        public static ObservableCollection<PathList> FileFoundPathList { get; } = new ObservableCollection<PathList>
         {
-            // Process the list of files found in the directory.
-            string[] fileEntries = Directory.GetFiles(targetDirectory);
 
-            foreach (string fileName in fileEntries)
-                if (Path.GetFileName(fileName).Equals(foilName))
+        };
+
+        public static void ProcessDirectory(string targetDirectory, string foilName)
+        {
+            foreach (string file in Directory.GetFiles(targetDirectory, foilName,SearchOption.AllDirectories))
+            {
+                if (Path.GetFileName(file).Equals(foilName))
                 {
-                    Process.Start(fileName);
-                    return true;
+                    FileFoundPathList.Add(new PathList() { FileFoundPath = file });
+                }
+            }
+            // Process the list of files found in the directory.
+            //string[] fileEntries = Directory.GetFiles(targetDirectory);
+
+            //foreach (string fileName in fileEntries)
+            //    if (Path.GetFileName(fileName).Equals(foilName))
+            //    {
+            //        Process.Start(fileName);
+            //        return true;
+            //    }
+
+            //string[] subdirectoryEntries = Directory.GetDirectories(targetDirectory);
+            //foreach (string subdirectory in subdirectoryEntries)
+            //    if (ProcessDirectory(subdirectory, foilName)) return true;
+
+            //return false;
+
+            //to avoid recursion
+        }
+
+        public string SelectedItem
+        {
+            get => _selectedItem;
+            set
+            {
+                if (value == _selectedItem)
+                {
+                    return;
                 }
 
-            if(++depthCounter==10)
-            {
-                return false;
+                _selectedItem = value;
+                OnPropertyChanged();
             }
 
-            string[] subdirectoryEntries = Directory.GetDirectories(targetDirectory);
-            foreach (string subdirectory in subdirectoryEntries)
-                if (ProcessDirectory(subdirectory, foilName)) return true;
-
-            return false;
         }
-        
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
