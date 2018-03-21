@@ -13,7 +13,7 @@ namespace FileFindingTool
     class ViewModel : INotifyPropertyChanged
     {
         private string _searchName;
-
+        private static int depthCounter=0;
         public string SearchName
         {
             get => _searchName;
@@ -48,8 +48,7 @@ namespace FileFindingTool
         }
 
         public ICommand FindFile => new RelayCommand(() => {
-            FileSearchEngine();
-            IsFileFound = false;
+            IsFileFound=ProcessDirectory(SearchDirectory, SearchName);
         }
     );
 
@@ -68,56 +67,33 @@ namespace FileFindingTool
             }
         }
 
-        public bool IsFileFound;
-        public void FileSearchEngine()
+        private static bool IsFileFound;
+
+
+        public static bool ProcessDirectory(string targetDirectory, string foilName)
         {
-            string fileOME = SearchDirectory + SearchName;
-            if(File.Exists(fileOME))
-            {
-                Process.Start(fileOME);
-                IsFileFound = true;
-                FileFoundPath = fileOme;
-            }
+            // Process the list of files found in the directory.
+            string[] fileEntries = Directory.GetFiles(targetDirectory);
 
-            if(!IsFileFound)
-            {
-                foreach (string file in Directory.GetFiles(SearchDirectory))
+            foreach (string fileName in fileEntries)
+                if (Path.GetFileName(fileName).Equals(foilName))
                 {
-                    if (Path.GetFileName(file).Equals(SearchName))
-                    {
-                        Process.Start(file);
-                        FileFoundPath = file;
-                        IsFileFound = true;
-                        if (IsFileFound)
-                            break;
-                    }
-                    if (IsFileFound)
-                        break;
+                    Process.Start(fileName);
+                    return true;
                 }
 
+            if(++depthCounter==10)
+            {
+                return false;
             }
 
-            if (IsFileFound != true)
-            {
-                foreach (string FoundDirectory in Directory.GetDirectories(SearchDirectory))
-                {
-                    foreach (string file in Directory.GetFiles(FoundDirectory))
-                    {
-                        if (Path.GetFileName(file).Equals(SearchName))
-                        {
-                            Process.Start(file);
-                            FileFoundPath = file;
-                            IsFileFound = true;
-                        }
-                        if (IsFileFound == true)
-                            break;
-                    }
-                    if (IsFileFound)
-                        break;
-                }
-            }
+            string[] subdirectoryEntries = Directory.GetDirectories(targetDirectory);
+            foreach (string subdirectory in subdirectoryEntries)
+                if (ProcessDirectory(subdirectory, foilName)) return true;
+
+            return false;
         }
-
+        
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
