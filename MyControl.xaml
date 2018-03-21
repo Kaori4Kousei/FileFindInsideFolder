@@ -25,14 +25,15 @@
         </StackPanel>
         <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Vertical">
             <Button Command="{Binding FindFile}">Find the files!</Button>
-            <ListBox ItemsSource="{Binding FileFoundPathList}" SelectedItem="{Binding SelectedItem}">
+            <TextBlock Margin="4">Found Files: </TextBlock>
+            <ListBox ItemsSource="{Binding FileFoundPathList}" SelectedItem="{Binding SelectedItem, Mode=TwoWay}" Margin="4">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding FileFoundPath}"/>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-            <TextBlock Text="{Binding SelectedItem}"/>
+            <TextBlock Name="listBox"  Text="{Binding SelectedItemText, StringFormat='Path Selected By You : {0}'}" Margin="5"/>
         </StackPanel>
     </Grid>
 </UserControl>

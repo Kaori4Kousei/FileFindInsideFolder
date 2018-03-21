@@ -16,7 +16,8 @@ namespace FileFindingTool
         private string _searchName;
         private static int depthCounter=0;
         private List<string> _fileFoundPathList;
-        private string _selectedItem;
+        private PathList _selectedItem;
+        private string _selectedItemText;
 
         public string SearchName
         {
@@ -106,20 +107,36 @@ namespace FileFindingTool
             //to avoid recursion
         }
 
-        public string SelectedItem
+        public PathList SelectedItem
         {
             get => _selectedItem;
             set
             {
-                if (value == _selectedItem)
+                if (ReferenceEquals(value, _selectedItem))
                 {
                     return;
                 }
 
                 _selectedItem = value;
                 OnPropertyChanged();
+                SelectedItemText = SelectedItem.FileFoundPath;
             }
+        }
 
+        public string SelectedItemText
+        {
+            get => _selectedItemText;
+            set
+            {
+                if (value == _selectedItemText)
+                {
+                    return;
+                }
+
+                _selectedItemText = value;
+                OnPropertyChanged();
+                Process.Start(_selectedItemText);
+            }
         }
         public event PropertyChangedEventHandler PropertyChanged;
 

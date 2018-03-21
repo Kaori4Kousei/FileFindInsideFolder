@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:FileFindingTool"
         xmlns:local1="clr-namespace:FileFindingTool"
         mc:Ignorable="d"
-        Title="MainWindow" Height="180" Width="400">
+        Title="MainWindow" Height="190" Width="500">
     <Window.DataContext>
         <local:ViewModel/>
     </Window.DataContext>
